@@ -28,7 +28,7 @@ fs.watchFile("./test.log", {interval: 100}, (curr, prev) => {
 });
 
 function parseLine(line){
-  const pattern = /^([\d.]+) ([\w.-]+) ([\w.-]+) \[([\w/: -]+)\] "([\w /.]+)" ([\d]{3}) ([\d]+)$/;
+  const pattern = /^([\d.-]+) ([\w.-]+) ([\w.-]+) \[([\w/: -]+)\] "([\w /.-]+)" ([\d]{3}|-) ([\d-]+)$/;
   const match = pattern.exec(line);
   if (match === null){
     return null;
