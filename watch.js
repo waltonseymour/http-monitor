@@ -7,9 +7,10 @@ const offset = 0;
 var lastSeen = null;
 var currentRate = 0;
 
-// Watches log file for changes every 100ms
+// watches log file for changes every 100ms
 fs.watchFile("./test.log", {interval: 100}, (curr, prev) => {
   var lineReader = readline.createInterface({
+    // opens read stream starting at the last point we've seen
     input: fs.createReadStream('./test.log', {start: offset})
   });
 
@@ -22,7 +23,7 @@ fs.watchFile("./test.log", {interval: 100}, (curr, prev) => {
     // send off to be processed and graphed.
     if (parsed !== null){
       lastSeen = parsed.date;
-      graph.addData(line.user, parseInt(line.size));
+      graph.addData(parsed.date, parseInt(parsed.size));
    }
   });
 });
