@@ -3,7 +3,7 @@ const readline = require('readline');
 const graph = require('./graph');
 graph.graph();
 
-const offset = 0;
+var offset = 0;
 var lastSeen = null;
 var currentRate = 0;
 
