@@ -1,7 +1,7 @@
 /// <reference path="node.d.ts" />
 
-import * as fs from 'fs';
-import * as readline from 'readline';
+import { watchFile, createReadStream } from 'fs';
+import { createInterface } from 'readline';
 import * as moment from 'moment';
 
 const traffic : Array<number> = [];
@@ -10,10 +10,10 @@ let lastSeen : Date = null;
 let requestsPerMin: number = 0;
 
 // watches log file for changes every 100ms
-fs.watchFile("./test.log", {interval: 100}, () => {
-  let lineReader = readline.createInterface({
+watchFile("./test.log", {interval: 100}, () => {
+  let lineReader = createInterface({
     // opens read stream starting at the last point we've seen
-    input: fs.createReadStream('./test.log', <any>{start: offset})
+    input: createReadStream('./test.log', <any>{start: offset})
   });
 
   lineReader.on('line', (line) => {
