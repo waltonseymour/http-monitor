@@ -2,9 +2,11 @@
 
 import * as fs from 'fs';
 import * as readline from 'readline';
+import * as moment from 'moment';
 
+const traffic : Array<number> = [];
 let offset : number = 0;
-let lastSeen : string = null;
+let lastSeen : Date = null;
 let requestsPerMin: number = 0;
 
 // watches log file for changes every 100ms
@@ -22,6 +24,7 @@ fs.watchFile("./test.log", {interval: 100}, () => {
     // send off to be processed and graphed.
     if (parsed !== null){
       lastSeen = parsed.date;
+      console.log(lastSeen);
    }
   });
 });
@@ -36,7 +39,7 @@ function parseLine(line: string){
     ip: match[1],
     rfc: match[2],
     user: match[3],
-    date: match[4],
+    date: moment(match[4], 'MM/DD/YYYY:HH:mm:ss Z').toDate(),
     request: match[5],
     status: parseInt(match[6]),
     size: parseInt(match[7])
