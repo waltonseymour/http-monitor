@@ -5,11 +5,12 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc watch.ts && node watch.js"
+    "start": "./node_modules/.bin/tsc watch.ts && node watch.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "moment": "^2.13.0"
+    "moment": "^2.13.0",
+    "typescript": "^1.8.10"
   }
 }
