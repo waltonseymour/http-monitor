@@ -1,18 +1,19 @@
-/// <reference path="node.d.ts" />
+/// <reference path='typings/index.d.ts' />
+/// <reference path='node.d.ts' />
 
 import { watchFile, createReadStream } from 'fs';
-import { createInterface } from 'readline';
+import { createInterface, ReadLine } from 'readline';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
-const traffic : Array<number> = [];
-let offset : number = 0;
-let lastSeen : Date = null;
-let requestsPerMin: number = 0;
+const traffic: Array<number> = [];
+let offset: number = 0;
+let lastSeen: Date = null;
 
 // watches log file for changes every 100ms
-watchFile("./test.log", {interval: 100}, () => {
-  let lineReader = createInterface({
-    // opens read stream starting at the last point we've seen
+watchFile('./test.log', {interval: 100}, () => {
+  // opens read stream starting at the last point we've seen
+  let lineReader: ReadLine = createInterface({
     input: createReadStream('./test.log', <any>{start: offset})
   });
 
@@ -24,7 +25,8 @@ watchFile("./test.log", {interval: 100}, () => {
     // send off to be processed and graphed.
     if (parsed !== null){
       lastSeen = parsed.date;
-      console.log(lastSeen);
+      let second: number = (lastSeen.valueOf() / 1000) % 120;
+      traffic.push(second);
    }
   });
 });
