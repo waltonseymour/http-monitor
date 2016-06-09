@@ -5,10 +5,15 @@ import { watchFile, createReadStream } from 'fs';
 import { createInterface, ReadLine } from 'readline';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+// import * as graph from './graph.ts';
+//
+// graph.graph();
 
-const traffic: Array<number> = [];
+// holds number of requests per second for the last two minutes
+// traffic[0] is the oldest and traffic[119]
+const traffic: Array<number> = _.fill(Array(120), 0);
 let offset: number = 0;
-let lastSeen: Date = null;
+const pageTraffic = {};
 
 // watches log file for changes every 100ms
 watchFile('./test.log', {interval: 100}, () => {
@@ -21,17 +26,30 @@ watchFile('./test.log', {interval: 100}, () => {
     // + 1 for newline character not included in string
     offset += line.length + 1;
     let parsed = parseLine(line);
-
     // send off to be processed and graphed.
     if (parsed !== null){
-      lastSeen = parsed.date;
-      let second: number = (lastSeen.valueOf() / 1000) % 120;
-      traffic.push(second);
+      processLine(parsed);
    }
   });
 });
 
-function parseLine(line: string){
+setInterval(() => {
+  traffic.shift();
+  traffic.push(0);
+  //graph.addData(_.fill(Array(120), 'swag'), traffic);
+}, 1000);
+
+interface parsedLine{
+  ip: string,
+  rfc: string,
+  user: string,
+  date: Date,
+  request: string,
+  status: number,
+  size: number
+};
+
+function parseLine(line: string): parsedLine{
   const pattern = /^([\d.-]+) ([\w.-]+) ([\w.-]+) \[([\w/: -]+)\] "([\w /.-]+)" ([\d]{3}|-) ([\d-]+)$/;
   const match = pattern.exec(line);
   if (match === null){
@@ -46,4 +64,14 @@ function parseLine(line: string){
     status: parseInt(match[6]),
     size: parseInt(match[7])
   };
+}
+
+function processLine(parsed: parsedLine){
+  if(!pageTraffic[parsed.request]){
+    pageTraffic[parsed.request] = 1;
+  }
+  else{
+    pageTraffic[parsed.request] += 1;
+  }
+  console.log(pageTraffic);
 }
