@@ -2,7 +2,7 @@ import * as moment from 'moment';
 
 const pageTraffic = {};
 
-export interface event{
+export interface event {
   ip: string,
   rfc: string,
   user: string,
@@ -13,14 +13,14 @@ export interface event{
   size: number
 };
 
-export function parseEvent(line: string): event{
+export function parseEvent(line: string): event {
   const pattern = /^([\d.-]+) ([\w.-]+) ([\w.-]+) \[([\w/: -]+)\] "([\w /.-]+)" ([\d]{3}|-) ([\d-]+)$/;
   const match = pattern.exec(line);
-  if (match === null){
+  if (match === null) {
     // might want to throw exception
     return null;
   }
-  else{
+  else {
     // some regex to extract section ie. /posts /users ..etc
     const sectionPattern = / (.*) /;
     const section = sectionPattern.exec(match[5])[1];
@@ -38,11 +38,11 @@ export function parseEvent(line: string): event{
   }
 }
 
-export function processEvent(parsed: event){
-  if(!pageTraffic[parsed.section]){
+export function processEvent(parsed: event) {
+  if (!pageTraffic[parsed.section]) {
     pageTraffic[parsed.section] = 1;
   }
-  else{
+  else {
     pageTraffic[parsed.section] += 1;
   }
   console.log(pageTraffic);

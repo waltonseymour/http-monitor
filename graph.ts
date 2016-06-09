@@ -17,7 +17,7 @@ var data = {
    y: []
 };
 
-export function graph(){
+export function graph() {
   screen.append(line); //must append before setting data
   line.setData([data]);
 
@@ -27,7 +27,7 @@ export function graph(){
   screen.render();
 }
 
-export function addData(x, y){
+export function addData(x, y) {
   data.x = x;
   data.y = y;
   line.setData([data]);
