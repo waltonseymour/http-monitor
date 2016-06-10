@@ -3,10 +3,11 @@
 
 import { watchFile, createReadStream } from 'fs';
 import { createInterface, ReadLine } from 'readline';
-import { event, parseEvent, processEvent} from './event';
+import { event, parseEvent, processEvent, requestWindow} from './event';
 import * as _ from 'lodash';
 
 let offset: number = 0;
+let elapsed: number = 0;
 
 // watches log file for changes every 100ms
 watchFile('./test.log', {interval: 100}, () => {
@@ -25,9 +26,3 @@ watchFile('./test.log', {interval: 100}, () => {
     }
   });
 });
-
-// setInterval(() => {
-//   traffic.shift();
-//   traffic.push(0);
-//   graph.addData(_.fill(Array(120), 'swag'), traffic);
-// }, 1000);

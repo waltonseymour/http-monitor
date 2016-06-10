@@ -1,4 +1,3 @@
-/// <reference path='blessed.d.ts' />
 import * as blessed from 'blessed';
 import * as contrib from 'blessed-contrib';
 
