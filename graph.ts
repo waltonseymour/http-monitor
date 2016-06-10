@@ -1,3 +1,5 @@
+/// <reference path='blessed.d.ts' />
+/// <reference path='blessed-contrib.d.ts' />
 import * as blessed from 'blessed';
 import * as contrib from 'blessed-contrib';
 

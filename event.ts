@@ -1,13 +1,13 @@
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import * as graph from './graph';
 
-
+graph.graph()
 
 // need to make these not global
-
 export const requestWindow : Array<number> = [0];
 // seconds
-const WINDOW_SIZE = 20;
+const WINDOW_SIZE = 30;
 let alert: boolean = false;
 
 // Eternity stats
@@ -86,9 +86,6 @@ function updateStats(point): void {
 
 function checkAlert(): void {
   let windowMean = _.sum(requestWindow) / requestWindow.length;
-  console.log(requestWindow);
-  console.log(mean);
-  console.log(windowMean)
   if ((windowMean - mean > std_dev) && alert === false){
     alert = true;
     console.log('alert');
@@ -101,6 +98,7 @@ function checkAlert(): void {
 
 //should be in a seperate file
 setInterval(() => {
+  graph.addData(_.fill(Array(WINDOW_SIZE), 'a'), requestWindow);
   if (requestWindow.length < WINDOW_SIZE) {
     requestWindow.push(0);
     return;
@@ -109,5 +107,4 @@ setInterval(() => {
   requestWindow.push(0);
   updateStats(point);
   checkAlert();
-
 }, 1000);
