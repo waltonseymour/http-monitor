@@ -2,7 +2,9 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 
-export const requestWindow : Array<number> = _.fill(Array(10), 0);
+export const requestWindow : Array<number> = [0];
+// seconds
+const WINDOW_SIZE = 120;
 
 // Eternity stats
 let elapsed = 0;
@@ -50,7 +52,8 @@ export function parseEvent(line: string): event {
 
 export function processEvent(parsed: event) {
   // fix to only deal with events as they come in.
-  if (moment().toDate().getTime() - parsed.date.getTime() > 120 * 60 * 1000){
+  // assumes time stamps are proper
+  if (moment().toDate().getTime() - parsed.date.getTime() > WINDOW_SIZE * 1000){
     return;
   }
 
@@ -63,11 +66,16 @@ export function processEvent(parsed: event) {
   }
   // assumes the last place in array
   // !! not true for data in log before program
-  requestWindow[requestWindow.length - 1]++;
+  let index = requestWindow.length === 0 ? 0 : requestWindow.length -1;
+  requestWindow[index]++;
   // mean and std_dev updated elsewhere
 }
 
 setInterval(() => {
+  if(requestWindow.length < WINDOW_SIZE){
+    requestWindow.push(0);
+    return;
+  }
   let point: number = requestWindow.shift();
   requestWindow.push(0);
   elapsed++;
@@ -77,5 +85,4 @@ setInterval(() => {
   std_dev = ((Ex2 - (Ex ** 2)/ elapsed) / elapsed) ** 0.5;
   mean = Ex / elapsed;
   console.log(mean);
-  console.log(std_dev);
 }, 1000);
