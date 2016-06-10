@@ -2,9 +2,13 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 
+
+// need to make these not global
+
 export const requestWindow : Array<number> = [0];
 // seconds
-const WINDOW_SIZE = 120;
+const WINDOW_SIZE = 20;
+let alert: boolean = false;
 
 // Eternity stats
 let elapsed = 0;
@@ -50,7 +54,7 @@ export function parseEvent(line: string): event {
   }
 }
 
-export function processEvent(parsed: event) {
+export function processEvent(parsed: event): void {
   // fix to only deal with events as they come in.
   // assumes time stamps are proper
   if (moment().toDate().getTime() - parsed.date.getTime() > WINDOW_SIZE * 1000){
@@ -71,18 +75,39 @@ export function processEvent(parsed: event) {
   // mean and std_dev updated elsewhere
 }
 
-setInterval(() => {
-  if(requestWindow.length < WINDOW_SIZE){
-    requestWindow.push(0);
-    return;
-  }
-  let point: number = requestWindow.shift();
-  requestWindow.push(0);
+function updateStats(point): void {
   elapsed++;
   Ex += point;
   Ex2 += point ** 2;
   // allows a rolling standard devation
   std_dev = ((Ex2 - (Ex ** 2)/ elapsed) / elapsed) ** 0.5;
   mean = Ex / elapsed;
+}
+
+function checkAlert(): void {
+  let windowMean = _.sum(requestWindow) / requestWindow.length;
+  console.log(requestWindow);
   console.log(mean);
+  console.log(windowMean)
+  if ((windowMean - mean > std_dev) && alert === false){
+    alert = true;
+    console.log('alert');
+  }
+  else if ((windowMean - mean < std_dev) && alert === true){
+    alert = false;
+    console.log('alert removed');
+  }
+}
+
+//should be in a seperate file
+setInterval(() => {
+  if (requestWindow.length < WINDOW_SIZE) {
+    requestWindow.push(0);
+    return;
+  }
+  let point: number = requestWindow.shift();
+  requestWindow.push(0);
+  updateStats(point);
+  checkAlert();
+
 }, 1000);

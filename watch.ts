@@ -7,7 +7,6 @@ import { event, parseEvent, processEvent, requestWindow} from './event';
 import * as _ from 'lodash';
 
 let offset: number = 0;
-let elapsed: number = 0;
 
 // watches log file for changes every 100ms
 watchFile('./test.log', {interval: 100}, () => {
