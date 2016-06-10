@@ -6,8 +6,8 @@ export const requestWindow : Array<number> = _.fill(Array(10), 0);
 
 // Eternity stats
 let elapsed = 0;
-let En = 0;
-let En2 = 0;
+let Ex = 0;
+let Ex2 = 0;
 let mean = 0;
 let std_dev = 0;
 const pageTraffic = {};
@@ -71,11 +71,11 @@ setInterval(() => {
   let point: number = requestWindow.shift();
   requestWindow.push(0);
   elapsed++;
-  En += point;
-  En2 += point ** 2;
-
-  std_dev = ((En2 - (En ** 2)/ elapsed) / (elapsed - 1)) ** 0.5;
-  mean = En / elapsed;
+  Ex += point;
+  Ex2 += point ** 2;
+  // allows a rolling standard devation
+  std_dev = ((Ex2 - (Ex ** 2)/ elapsed) / elapsed) ** 0.5;
+  mean = Ex / elapsed;
   console.log(mean);
   console.log(std_dev);
 }, 1000);
