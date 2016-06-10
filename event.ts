@@ -2,11 +2,12 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 
-export const requestWindow : Array<number> = _.fill(Array(120), 0);
+export const requestWindow : Array<number> = _.fill(Array(10), 0);
 
 // Eternity stats
 let elapsed = 0;
-let count = 0;
+let En = 0;
+let En2 = 0;
 let mean = 0;
 let std_dev = 0;
 const pageTraffic = {};
@@ -60,7 +61,6 @@ export function processEvent(parsed: event) {
   else {
     pageTraffic[parsed.section]++;
   }
-  count++;
   // assumes the last place in array
   // !! not true for data in log before program
   requestWindow[requestWindow.length - 1]++;
@@ -68,9 +68,14 @@ export function processEvent(parsed: event) {
 }
 
 setInterval(() => {
-  let point = requestWindow.shift();
+  let point: number = requestWindow.shift();
   requestWindow.push(0);
   elapsed++;
-  mean = count / elapsed;
+  En += point;
+  En2 += point ** 2;
+
+  std_dev = ((En2 - (En ** 2)/ elapsed) / (elapsed - 1)) ** 0.5;
+  mean = En / elapsed;
   console.log(mean);
+  console.log(std_dev);
 }, 1000);
