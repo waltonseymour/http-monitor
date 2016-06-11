@@ -2,18 +2,16 @@
   "name": "http-monitor",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node watch.js",
-    "prestart": "./node_modules/.bin/tsc watch.ts"
+    "start": "npm run build && node dist/watch.js",
+    "build": "./node_modules/.bin/tsc -p ./"
   },
-  "author": "",
+  "author": "Walton Seymour",
   "license": "ISC",
   "dependencies": {
     "blessed": "^0.1.81",
     "blessed-contrib": "^3.5.5",
-    "hoard": "^0.1.5",
     "lodash": "^4.13.1",
     "moment": "^2.13.0",
     "typescript": "^1.8.10"
