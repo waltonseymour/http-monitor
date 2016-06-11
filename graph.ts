@@ -5,13 +5,8 @@ import * as contrib from 'blessed-contrib';
 
 const screen = blessed.screen();
 
-const line = contrib.line({
-  style: {
-    line: "blue",
-    text: "yellow",
-    baseline: "white"
-  }
-});
+screen.render();
+
 
 var data = {
    x: [],
@@ -19,8 +14,15 @@ var data = {
 };
 
 export function graph() {
-  screen.append(line); //must append before setting data
-  line.setData([data]);
+  var grid = new contrib.grid({rows: 12, cols: 12, screen: screen});
+
+  var donut = grid.set(8, 8, 4, 2, contrib.donut, {
+    label: 'Percent Donut',
+    radius: 16,
+    arcWidth: 4,
+    yPadding: 2,
+    data: [{label: 'Storage', percent: 87}]
+  });
 
   screen.key(['escape', 'q', 'C-c'], function(ch, key) {
     return process.exit(0);
@@ -31,6 +33,6 @@ export function graph() {
 export function addData(x, y) {
   data.x = x;
   data.y = y;
-  line.setData([data]);
+  //line.setData([data]);
   screen.render();
 }

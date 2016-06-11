@@ -1,6 +1,6 @@
 declare module 'blessed' {
     function screen(): BlessedScreen;
-    
+
     export interface BlessedScreen {
         render(): void;
         append(BlessedElement): void;
