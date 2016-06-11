@@ -2,8 +2,6 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import * as graph from './graph';
 
-graph.graph()
-
 // need to make these not global
 export const requestWindow : Array<number> = [0];
 // seconds
@@ -72,7 +70,6 @@ export function processEvent(parsed: event): void {
   // !! not true for data in log before program
   let index = requestWindow.length === 0 ? 0 : requestWindow.length -1;
   requestWindow[index]++;
-  // mean and std_dev updated elsewhere
 }
 
 function updateStats(point): void {
@@ -95,6 +92,8 @@ function checkAlert(): void {
     console.log('alert removed');
   }
 }
+
+graph.graph();
 
 //should be in a seperate file
 setInterval(() => {

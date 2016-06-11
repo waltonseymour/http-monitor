@@ -11,6 +11,6 @@ declare module 'blessed-contrib' {
 
     class grid {
         constructor(data: Object);
-        set(x1, x2, y1, y2, widget, options: Object): chart;
+        set(row, col, rowspan, colspan, widget, options: Object): chart;
     }
 }

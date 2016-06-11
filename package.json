@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/tsc watch.ts && node watch.js"
+    "start": "node watch.js",
+    "prestart": "./node_modules/.bin/tsc watch.ts"
   },
   "author": "",
   "license": "ISC",

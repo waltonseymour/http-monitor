@@ -5,10 +5,9 @@ import * as contrib from 'blessed-contrib';
 
 const screen = blessed.screen();
 
-screen.render();
+let line;
 
-
-var data = {
+let data = {
    x: [],
    y: []
 };
@@ -24,6 +23,14 @@ export function graph() {
     data: [{label: 'Storage', percent: 87}]
   });
 
+  line = grid.set(0, 0, 8, 12, contrib.line, {
+    style: {
+      line: "yellow",
+      text: "green",
+      baseline: "black"
+    }
+  });
+
   screen.key(['escape', 'q', 'C-c'], function(ch, key) {
     return process.exit(0);
   });
@@ -33,6 +40,6 @@ export function graph() {
 export function addData(x, y) {
   data.x = x;
   data.y = y;
-  //line.setData([data]);
+  line.setData([data]);
   screen.render();
 }
