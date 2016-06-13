@@ -3,19 +3,11 @@ import * as _ from 'lodash';
 import * as graph from './graph';
 
 // seconds
-const WINDOW_SIZE = 5;
-let alert: boolean = false;
+export const WINDOW_SIZE = 5;
 
 // need to make these not global
 export const requestWindow : Array<number> = _.fill(Array(WINDOW_SIZE), 0);
-
-// Eternity stats
-let elapsed = 0;
-let Ex = 0;
-let Ex2 = 0;
-let mean = 0;
-let std_dev = 0;
-const pageTraffic = {};
+export const pageTraffic = {};
 
 export interface event {
   ip: string;
@@ -72,41 +64,3 @@ export function processEvent(parsed: event): void {
   let index = requestWindow.length === 0 ? 0 : requestWindow.length -1;
   requestWindow[index]++;
 }
-
-function updateStats(point, onlyElapsed=false): void {
-  elapsed++;
-  if (onlyElapsed){ return; }
-  Ex += point;
-  Ex2 += point ** 2;
-  // allows a rolling standard devation
-  std_dev = ((Ex2 - (Ex ** 2)/ elapsed) / elapsed) ** 0.5;
-  mean = Ex / elapsed;
-}
-
-function checkAlert(): void {
-  let windowMean = _.sum(requestWindow) / requestWindow.length;
-  if ((windowMean - mean > std_dev) && alert === false){
-    alert = true;
-    graph.addAlert(moment().toDate(), windowMean);
-    console.log('alert');
-  }
-  else if ((windowMean - mean < std_dev) && alert === true){
-    alert = false;
-    console.log('alert removed');
-  }
-}
-
-graph.graph();
-
-//should be in a seperate file
-setInterval(() => {
-  graph.addData(_.map(Array(WINDOW_SIZE),(x,i) => {
-      return (WINDOW_SIZE - i) + 's';
-  }), requestWindow);
-  let point: number = requestWindow.shift();
-  requestWindow.push(0);
-  updateStats(point, elapsed < WINDOW_SIZE);
-  if (elapsed > WINDOW_SIZE * 1.5){
-    checkAlert();
-  }
-}, 1000);
