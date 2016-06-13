@@ -1,7 +1,7 @@
+import * as _ from 'lodash';
 import { watchFile, createReadStream } from 'fs';
 import { createInterface, ReadLine } from 'readline';
 import { event, parseEvent, processEvent, requestWindow } from './event';
-import * as _ from 'lodash';
 
 export class Watcher {
   offset: number = 0;
@@ -30,5 +30,4 @@ export class Watcher {
       });
     });
   }
-
 }

@@ -1,9 +1,9 @@
 /// <reference path='typings/index.d.ts' />
 /// <reference path='node.d.ts' />
-import { requestWindow } from './event';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Graph } from './graph';
+import { requestWindow } from './event';
 
 
 export class Stats {

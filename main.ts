@@ -8,14 +8,13 @@ import { Graph } from './graph';
 import { WINDOW_SIZE, requestWindow } from './event';
 import { Stats } from './stats';
 
-let watcher = new Watcher('test.log');
-watcher.watch();
-let graph = new Graph();
+const watcher = new Watcher('test.log');
+const graph = new Graph();
 const stats = new Stats();
+watcher.watch();
 
-//should be in a seperate file
 setInterval(() => {
-  graph.addData(_.map(Array(WINDOW_SIZE),(x,i) => {
+  graph.addData(_.map(Array(WINDOW_SIZE), (x,i) => {
       return (WINDOW_SIZE - i) + 's';
   }), requestWindow);
   let point: number = requestWindow.shift();
