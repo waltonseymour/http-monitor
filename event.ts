@@ -1,6 +1,5 @@
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import * as graph from './graph';
 
 // seconds
 export const WINDOW_SIZE = 5;

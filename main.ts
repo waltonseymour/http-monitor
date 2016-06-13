@@ -4,13 +4,13 @@
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Watcher } from './watch';
-import * as graph from './graph';
+import { Graph } from './graph';
 import { WINDOW_SIZE, requestWindow } from './event';
 import { Stats } from './stats';
 
 let watcher = new Watcher('test.log');
 watcher.watch();
-graph.graph();
+let graph = new Graph();
 const stats = new Stats();
 
 //should be in a seperate file
@@ -22,6 +22,6 @@ setInterval(() => {
   requestWindow.push(0);
   stats.update(point, stats.elapsed < WINDOW_SIZE);
   if (stats.elapsed > WINDOW_SIZE * 1.5){
-    stats.checkAlert();
+    stats.checkAlert(graph);
   }
 }, 1000);

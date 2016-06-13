@@ -2,8 +2,8 @@
 /// <reference path='node.d.ts' />
 import { requestWindow } from './event';
 import * as moment from 'moment';
-import * as graph from './graph';
 import * as _ from 'lodash';
+import { Graph } from './graph';
 
 
 export class Stats {
@@ -24,7 +24,7 @@ export class Stats {
     this.mean = this.Ex / this.elapsed;
   }
 
-  checkAlert(): void {
+  checkAlert(graph: Graph): void {
     let windowMean = _.sum(requestWindow) / requestWindow.length;
     if ((windowMean - this.mean > this.std_dev) && this.alert === false){
       this.alert = true;

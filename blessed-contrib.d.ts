@@ -1,6 +1,6 @@
 declare module 'blessed-contrib' {
 
-    class chart {
+    export class chart {
       constructor(params: Object);
       setData(data: Object): void;
     }
