@@ -6,6 +6,7 @@ import * as contrib from 'blessed-contrib';
 const screen = blessed.screen();
 
 let line;
+let table;
 
 let data = {
    x: [],
@@ -31,6 +32,15 @@ export function graph() {
     }
   });
 
+  table =  grid.set(8, 0, 4, 4, contrib.table, {
+    keys: true,
+    fg: 'blue',
+    interactive: true,
+    label: 'Alerts',
+    columnSpacing: 1,
+    columnWidth: [22, 22, 10]
+  });
+
   screen.key(['escape', 'q', 'C-c'], function(ch, key) {
     return process.exit(0);
   });
@@ -41,5 +51,13 @@ export function addData(x, y) {
   data.x = x;
   data.y = y;
   line.setData([data]);
+  screen.render();
+}
+
+export function addAlert(added: Date, mean: number) {
+  table.setData({
+    headers: ['Timestamp Added', 'Timestamp Removed', 'Req / s'],
+    data: [[added, '', mean]]
+  });
   screen.render();
 }
