@@ -2,17 +2,20 @@
 /// <reference path='blessed-contrib.d.ts' />
 import * as blessed from 'blessed';
 import * as contrib from 'blessed-contrib';
+import * as moment from 'moment';
 
 export class Graph {
   screen = blessed.screen();
-  line: contrib.chart;
-  table: contrib.chart;
-  donut: contrib.chart;
+  line: contrib.line;
+  table: contrib.table;
+  donut: contrib.donut;
   grid: contrib.grid;
-  data = {
+  requestdata = {
      x: [],
      y: []
   };
+
+  alertData = [];
 
   constructor() {
     this.grid = new contrib.grid({rows: 12, cols: 12, screen: this.screen});
@@ -33,13 +36,13 @@ export class Graph {
       }
     });
 
-    this.table =  this.grid.set(8, 0, 4, 4, contrib.table, {
+    this.table =  this.grid.set(8, 0, 4, 8, contrib.table, {
       keys: true,
-      fg: 'blue',
       interactive: true,
+      fg: 'blue',
       label: 'Alerts',
       columnSpacing: 1,
-      columnWidth: [22, 22, 10]
+      columnWidth: [45, 45, 10]
     });
 
     this.screen.key(['escape', 'q', 'C-c'], function(ch, key) {
@@ -50,17 +53,29 @@ export class Graph {
   }
 
   addData(x, y) {
-    this.data.x = x;
-    this.data.y = y;
-    this.line.setData([this.data]);
+    this.requestdata.x = x;
+    this.requestdata.y = y;
+    this.line.setData([this.requestdata]);
     this.screen.render();
   }
 
   addAlert(added: Date, mean: number) {
+    this.alertData.push([added, '', mean]);
     this.table.setData({
-      headers: ['Timestamp Added', 'Timestamp Removed', 'Req / s'],
-      data: [[added, '', mean]]
+      headers: ['Time Added', 'Time Removed', 'Req / s'],
+      data: this.alertData
     });
+    this.table.focus();
+    this.screen.render();
+  }
+
+  removeAlert() {
+    this.alertData[this.alertData.length - 1][1] = moment().toDate();
+    this.table.setData({
+      headers: ['Time Added', 'Time Removed', 'Req / s'],
+      data: this.alertData
+    });
+    this.table.focus();
     this.screen.render();
   }
 

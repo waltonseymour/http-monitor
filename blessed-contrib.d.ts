@@ -8,10 +8,12 @@ declare module 'blessed-contrib' {
     class donut extends chart {}
 
     class line extends chart {}
-    class table extends chart {}
+    class table extends chart {
+      focus(): void;
+    }
 
     class grid {
         constructor(data: Object);
-        set(row, col, rowspan, colspan, widget, options: Object): chart;
+        set(row, col, rowspan, colspan, widget, options: Object);
     }
 }

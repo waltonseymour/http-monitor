@@ -11,12 +11,14 @@ import { Stats } from './stats';
 const watcher = new Watcher('test.log');
 const graph = new Graph();
 const stats = new Stats();
+const xAxis = _.map(Array(WINDOW_SIZE), (x,i) => {
+  return (WINDOW_SIZE - i) + 's';
+});
+
 watcher.watch();
 
 setInterval(() => {
-  graph.addData(_.map(Array(WINDOW_SIZE), (x,i) => {
-      return (WINDOW_SIZE - i) + 's';
-  }), requestWindow);
+  graph.addData(xAxis, requestWindow);
   let point: number = requestWindow.shift();
   requestWindow.push(0);
   stats.update(point, stats.elapsed < WINDOW_SIZE);

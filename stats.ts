@@ -26,14 +26,13 @@ export class Stats {
 
   checkAlert(graph: Graph): void {
     let windowMean = _.sum(requestWindow) / requestWindow.length;
-    if ((windowMean - this.mean > this.std_dev) && this.alert === false){
+    if ((windowMean - this.mean > this.std_dev) && this.alert === false) {
       this.alert = true;
       graph.addAlert(moment().toDate(), windowMean);
-      console.log('alert');
     }
-    else if ((windowMean - this.mean < this.std_dev) && this.alert === true){
+    else if ((windowMean - this.mean < this.std_dev) && this.alert === true) {
       this.alert = false;
-      console.log('alert removed');
+      graph.removeAlert();
     }
   }
 
