@@ -40,10 +40,6 @@ export class EventProcessor {
   requestWindow: Array<number> = _.fill(Array(this.WINDOW_SIZE), 0);
   pageTraffic = {};
 
-  parse(line: string): Event {
-    return new Event(line);
-  }
-
   process(parsed: Event): void {
     // fix to only deal with events as they come in.
     // assumes time stamps are proper

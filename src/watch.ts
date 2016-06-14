@@ -22,7 +22,7 @@ export class Watcher {
       lineReader.on('line', (line) => {
         // + 1 for newline character not included in string
         this.offset += line.length + 1;
-        let parsed: Event = processor.parse(line);
+        let parsed: Event = new Event(line);
         // send off to be processed and graphed.
         if (parsed !== null){
           processor.process(parsed);
