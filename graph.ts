@@ -7,8 +7,8 @@ import * as moment from 'moment';
 export class Graph {
   screen = blessed.screen();
   line: contrib.line;
-  table: contrib.table;
-  donut: contrib.donut;
+  alerts: contrib.table;
+  sections: contrib.table;
   grid: contrib.grid;
   requestdata = {
      x: [],
@@ -20,12 +20,10 @@ export class Graph {
   constructor() {
     this.grid = new contrib.grid({rows: 12, cols: 12, screen: this.screen});
 
-    this.donut = this.grid.set(8, 8, 4, 2, contrib.donut, {
-      label: 'Percent Donut',
-      radius: 16,
-      arcWidth: 4,
-      yPadding: 2,
-      data: [{label: 'Storage', percent: 87}]
+    this.sections =  this.grid.set(8, 8, 4, 2, contrib.table, {
+      label: 'Top Sections',
+      columnSpacing: 1,
+      columnWidth: [20, 15]
     });
 
     this.line = this.grid.set(0, 0, 8, 12, contrib.line, {
@@ -36,7 +34,7 @@ export class Graph {
       }
     });
 
-    this.table =  this.grid.set(8, 0, 4, 8, contrib.table, {
+    this.alerts =  this.grid.set(8, 0, 4, 8, contrib.table, {
       keys: true,
       interactive: true,
       fg: 'blue',
@@ -61,21 +59,21 @@ export class Graph {
 
   addAlert(added: Date, mean: number) {
     this.alertData.push([added, '', mean]);
-    this.table.setData({
+    this.alerts.setData({
       headers: ['Time Added', 'Time Removed', 'Req / s'],
       data: this.alertData
     });
-    this.table.focus();
+    this.alerts.focus();
     this.screen.render();
   }
 
   removeAlert() {
     this.alertData[this.alertData.length - 1][1] = moment().toDate();
-    this.table.setData({
+    this.alerts.setData({
       headers: ['Time Added', 'Time Removed', 'Req / s'],
       data: this.alertData
     });
-    this.table.focus();
+    this.alerts.focus();
     this.screen.render();
   }
 

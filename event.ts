@@ -59,7 +59,6 @@ export function processEvent(parsed: event): void {
     pageTraffic[parsed.section]++;
   }
   // assumes the last place in array
-  // !! not true for data in log before program
-  let index = requestWindow.length === 0 ? 0 : requestWindow.length -1;
+  let index = requestWindow.length -1;
   requestWindow[index]++;
 }
