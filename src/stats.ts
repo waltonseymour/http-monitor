@@ -3,7 +3,7 @@
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Graph } from './graph';
-import { requestWindow } from './event';
+import { EventProcessor } from './event';
 
 export class Stats {
   alert: boolean = false;
@@ -35,8 +35,8 @@ export class Stats {
     if the window mean exceeds the eternity mean by more than a standard_deviation.
     Uses a boolean variable 'alert' to maintain state.
   */
-  checkAlert(graph: Graph): void {
-    let windowMean = _.sum(requestWindow) / requestWindow.length;
+  checkAlert(graph: Graph, processor: EventProcessor): void {
+    let windowMean = _.sum(processor.requestWindow) / processor.requestWindow.length;
     if ((windowMean - this.mean > this.std_dev) && this.alert === false) {
       this.alert = true;
       graph.addAlert(moment().toDate(), windowMean);
