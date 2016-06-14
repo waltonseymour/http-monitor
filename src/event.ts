@@ -27,7 +27,7 @@ export function parseEvent(line: string): event {
     return null;
   }
   else {
-    // some regex to extract section ie. /posts /users ..etc
+    // regex to extract section ie. /posts /users ..etc
     const sectionPattern = / (\/\w+)\//;
     let sectionMatch = sectionPattern.exec(match[5]);
 
@@ -58,7 +58,6 @@ export function processEvent(parsed: event): void {
   else {
     pageTraffic[parsed.section]++;
   }
-  // assumes the last place in array
   let index = requestWindow.length -1;
   requestWindow[index]++;
 }
