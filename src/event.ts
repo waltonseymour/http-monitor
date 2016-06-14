@@ -11,7 +11,7 @@ export class Event {
   status: number;
   size: number;
 
-  constructor(line: string){
+  constructor(line: string) {
     const pattern = /^([\d.-]+) ([\w.-]+) ([\w.-]+) \[([\w/: -]+)\] "([\w /.-]+)" ([\d]{3}|-) ([\d-]+)$/;
     const match = pattern.exec(line);
 
@@ -33,24 +33,44 @@ export class Event {
 export class EventProcessor {
   WINDOW_SIZE: number = 120;
   requestWindow: Array<number> = _.fill(Array(this.WINDOW_SIZE), 0);
-  pageTraffic = {};
+  sectionTraffic: Object = {};
 
-  process(parsed: Event): void {
-    // fix to only deal with events as they come in.
-    // assumes time stamps are proper
-    if (moment().toDate().getTime() - parsed.date.getTime() > this.WINDOW_SIZE * 1000){
+  /*
+    process: Takes in an log line as a string and parses an Event object.
+    It then increments requestWindow and sectionTraffic as needed.
+  */
+  process(line: string): void {
+    const event = new Event(line);
+    if (moment().toDate().getTime() - event.date.getTime() > this.WINDOW_SIZE * 1000) {
       return;
     }
 
-    if (!this.pageTraffic[parsed.section]) {
-      this.pageTraffic[parsed.section] = 1;
+    if (!this.sectionTraffic[event.section]) {
+      this.sectionTraffic[event.section] = 1;
+    }
+    else {
+      this.sectionTraffic[event.section]++;
+    }
+    this.requestWindow[this.requestWindow.length - 1]++;
+  }
+
+  /*
+    processHistorical: Takes in an log line as a string and parses an Event object.
+    It then increments requestWindow and sectionTraffic as needed.
+  */
+  processHistorical(line: string): void {
+    const event = new Event(line);
+    if (moment().toDate().getTime() - event.date.getTime() > this.WINDOW_SIZE * 1000) {
+      return;
     }
 
-    else {
-      this.pageTraffic[parsed.section]++;
+    if (!this.sectionTraffic[event.section]) {
+      this.sectionTraffic[event.section] = 1;
     }
-    let index = this.requestWindow.length -1;
-    this.requestWindow[index]++;
+    else {
+      this.sectionTraffic[event.section]++;
+    }
+    this.requestWindow[this.requestWindow.length - 1]++;
   }
 
 }

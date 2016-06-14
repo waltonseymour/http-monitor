@@ -14,7 +14,6 @@ export class Graph {
      x: [],
      y: []
   };
-
   alertData = [];
 
   constructor() {

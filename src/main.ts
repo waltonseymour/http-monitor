@@ -16,9 +16,14 @@ const xAxis = _.map(Array(proccessor.WINDOW_SIZE), (x,i) => {
   return (proccessor.WINDOW_SIZE - i) + 's';
 });
 
+// Attaches processor to file listener and begins polling
 watcher.watch(proccessor);
 
 setInterval(() => {
+  updateAll();
+}, 1000);
+
+function updateAll(): void {
   graph.addData(xAxis, proccessor.requestWindow);
   let point: number = proccessor.requestWindow.shift();
   proccessor.requestWindow.push(0);
@@ -26,4 +31,4 @@ setInterval(() => {
   if (stats.elapsed > proccessor.WINDOW_SIZE * 1.5){
     stats.checkAlert(graph, proccessor);
   }
-}, 1000);
+}

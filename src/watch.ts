@@ -11,22 +11,25 @@ export class Watcher {
     this.file = file;
   }
 
+  /*
+    watch: Regularly polls log file for changes and then opens a read stream
+    at the last point we've seen data. It then sends the Event object off to
+    a processor to handle
+  */
   watch(processor: EventProcessor): void {
-    // watches log file for changes every 100ms
-    watchFile(this.file, {interval: 100}, () => {
-      // opens read stream starting at the last point we've seen
+    // Polls log file for changes every 100ms
+    watchFile(this.file, { interval: 100 }, () => {
+      // Opens read stream starting at the last point we've seen
       let lineReader: ReadLine = createInterface({
-        input: createReadStream('./test.log', <any>{start: this.offset})
+        input: createReadStream(this.file, <any>{ start: this.offset })
       });
 
       lineReader.on('line', (line) => {
         // + 1 for newline character not included in string
         this.offset += line.length + 1;
-        let parsed: Event = new Event(line);
-        // send off to be processed and graphed.
-        if (parsed !== null){
-          processor.process(parsed);
-        }
+        // Sends event off to be processed
+        processor.process(line);
+
       });
     });
   }
