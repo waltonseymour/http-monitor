@@ -1,5 +1,5 @@
-/// <reference path='typings/index.d.ts' />
-/// <reference path='node.d.ts' />
+/// <reference path='../typings/index.d.ts' />
+/// <reference path='../node.d.ts' />
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Graph } from './graph';

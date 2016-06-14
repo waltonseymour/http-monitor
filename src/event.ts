@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 // seconds
-export const WINDOW_SIZE = 5;
+export const WINDOW_SIZE = 120;
 
 // need to make these not global
 export const requestWindow : Array<number> = _.fill(Array(WINDOW_SIZE), 0);
