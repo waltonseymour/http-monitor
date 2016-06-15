@@ -6,9 +6,11 @@ import { Event, EventProcessor} from './event';
 export class Watcher {
   offset: number = 0;
   file: string;
+  processor: EventProcessor;
 
-  constructor(file: string){
+  constructor(file: string, processor: EventProcessor) {
     this.file = file;
+    this.processor = processor;
   }
 
   /*
@@ -16,21 +18,24 @@ export class Watcher {
     at the last point we've seen data. It then sends the Event object off to
     a processor to handle
   */
-  watch(processor: EventProcessor): void {
+  watch(): void {
     // Polls log file for changes every 100ms
     watchFile(this.file, { interval: 100 }, () => {
-      // Opens read stream starting at the last point we've seen
-      let lineReader: ReadLine = createInterface({
-        input: createReadStream(this.file, <any>{ start: this.offset })
-      });
-
-      lineReader.on('line', (line) => {
-        // + 1 for newline character not included in string
-        this.offset += line.length + 1;
-        // Sends event off to be processed
-        processor.process(line);
-
-      });
+      this.handleLine();
     });
   }
+
+  handleLine(): void {
+    // Opens read stream starting at the last point we've seen
+    let lineReader: ReadLine = createInterface({
+      input: createReadStream(this.file, <any>{ start: this.offset })
+    });
+    lineReader.on('line', (line) => {
+      // + 1 for newline character not included in string
+      this.offset += line.length + 1;
+      // Sends event off to be processed
+      this.processor.process(line);
+    });
+  }
+
 }

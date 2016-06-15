@@ -8,27 +8,27 @@ import { Graph } from './graph';
 import { EventProcessor } from './event';
 import { Stats } from './stats';
 
-const watcher = new Watcher('test.log');
 const graph = new Graph();
 const stats = new Stats();
-const proccessor = new EventProcessor();
-const xAxis = _.map(Array(proccessor.WINDOW_SIZE), (x,i) => {
-  return (proccessor.WINDOW_SIZE - i) + 's';
+const processor = new EventProcessor(stats, graph);
+const watcher = new Watcher('test.log', processor);
+const xAxis = _.map(Array(processor.WINDOW_SIZE), (x,i) => {
+  return (processor.WINDOW_SIZE - i) + 's';
 });
 
-// Attaches processor to file listener and begins polling
-watcher.watch(proccessor);
+// Begins polling
+watcher.watch();
 
 setInterval(() => {
   updateAll();
 }, 1000);
 
 function updateAll(): void {
-  graph.addData(xAxis, proccessor.requestWindow);
-  let point: number = proccessor.requestWindow.shift();
-  proccessor.requestWindow.push(0);
-  stats.update(point, stats.elapsed < proccessor.WINDOW_SIZE);
-  if (stats.elapsed > proccessor.WINDOW_SIZE * 1.5){
-    stats.checkAlert(graph, proccessor);
+  graph.addData(xAxis, processor.requestWindow);
+  let point: number = processor.requestWindow.shift();
+  processor.requestWindow.push(0);
+  stats.update(point, stats.elapsed < processor.WINDOW_SIZE);
+  if (stats.elapsed > processor.WINDOW_SIZE * 1.5){
+    processor.checkAlert();
   }
 }
