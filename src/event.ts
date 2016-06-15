@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 
 export class Event {
+  raw: string;
   ip: string;
   rfc: string;
   user: string;
@@ -18,6 +19,7 @@ export class Event {
 
     const sectionPattern = / (\/\w+)\//;
     let sectionMatch = sectionPattern.exec(match[5]);
+    this.raw = line;
     this.ip = match[1];
     this.rfc = match[2];
     this.user = match[3];
