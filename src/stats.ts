@@ -3,8 +3,6 @@
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
-import { EventProcessor } from './event';
-
 export class Stats {
   startTime: Date;
   alert: boolean = false;

@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { watchFile, createReadStream } from 'fs';
 import { createInterface, ReadLine } from 'readline';
-import { Event, EventProcessor} from './event';
+import { EventProcessor} from './eventProcessor';
 
 export class Watcher {
   offset: number = 0;

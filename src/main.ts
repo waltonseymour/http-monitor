@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Watcher } from './watch';
 import { Graph } from './graph';
-import { EventProcessor } from './event';
+import { EventProcessor } from './eventProcessor';
 import { Stats } from './stats';
 
 const graph = new Graph();
