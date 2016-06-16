@@ -1,3 +1,10 @@
+###Setup
+`npm install` to pull down dependencies
+
+`npm run test` to run mocha tests
+
+`npm start -- {file}` to launch application for a given log file
+
 
 #### Create a simple console program that monitors HTTP traffic on your machine:
 
