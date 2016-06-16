@@ -2,20 +2,17 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Event } from './event';
 import { Stats } from './stats';
-import { Graph } from './graph';
 
 export class EventProcessor {
   WINDOW_SIZE: number = 120;
   requestWindow: Array<number> = _.fill(Array(this.WINDOW_SIZE), 0);
   sectionTraffic: Object = {};
   stats: Stats;
-  graph: Graph;
   currentBucket: number = 0;
   currentRequests: number = 0;
 
-  constructor(stats: Stats, graph: Graph){
+  constructor(stats: Stats){
     this.stats = stats;
-    this.graph = graph;
   }
 
   /*
@@ -31,7 +28,8 @@ export class EventProcessor {
 
     this.updateSection(event.section);
     if (historical === true) {
-      // buckets
+      // buckets into seconds from historical data
+      // has a off-by-one error for the last requst -- need to fix
       const epocSeconds = event.date.getTime() / 1000;
       if (epocSeconds === this.currentBucket) {
         this.currentRequests++;
@@ -53,20 +51,18 @@ export class EventProcessor {
     }
   }
 
-
   /*
-    checkAlert: Will add or remove alert to graph if the window mean exceeds
+    checkAlert: Will return true or false if the window mean exceeds
     the eternity mean by more than a standard_deviation.
-    Uses a boolean variable 'alert' to maintain state.
   */
-  checkAlert(): void {
+  checkAlert(): boolean {
     let windowMean = _.sum(this.requestWindow) / this.requestWindow.length;
     if ((windowMean - this.stats.mean > this.stats.std_dev) && this.stats.alert === false) {
-      this.stats.alert = true;
-      this.graph.addAlert(moment().toDate(), windowMean);
+      return true;
     } else if ((windowMean - this.stats.mean <= this.stats.std_dev) && this.stats.alert === true) {
-      this.stats.alert = false;
-      this.graph.removeAlert();
+      return false;
+    } else {
+      return null;
     }
   }
 
