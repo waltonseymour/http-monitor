@@ -61,6 +61,13 @@ export class Graph {
     let newData =_.map(data, (value, key) => {
       return [key, value];
     });
+    newData = newData.sort((a, b) => {
+      if (a[1] === b[1]) {
+        return 0;
+      } else {
+        return (a[1] < b[1]) ? -1 : 1;
+      }
+    });
     this.sections.setData({
       headers: ['Section', 'Req'],
       data: newData
