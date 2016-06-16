@@ -3,6 +3,7 @@
 import * as blessed from 'blessed';
 import * as contrib from 'blessed-contrib';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 export class Graph {
   screen = blessed.screen();
@@ -10,7 +11,7 @@ export class Graph {
   alerts: contrib.table;
   sections: contrib.table;
   grid: contrib.grid;
-  requestdata = {
+  requestData = {
      x: [],
      y: []
   };
@@ -21,8 +22,10 @@ export class Graph {
 
     this.sections =  this.grid.set(8, 8, 4, 2, contrib.table, {
       label: 'Top Sections',
-      columnSpacing: 1,
-      columnWidth: [20, 15]
+      interactive: false,
+      bg: 'black',
+      fg: 'green',
+      columnWidth: [8, 5]
     });
 
     this.line = this.grid.set(0, 0, 8, 12, contrib.line, {
@@ -50,10 +53,20 @@ export class Graph {
   }
 
   addData(x, y) {
-    this.requestdata.x = x;
-    this.requestdata.y = y;
-    this.line.setData([this.requestdata]);
+    this.requestData.x = x;
+    this.requestData.y = y;
+    this.line.setData([this.requestData]);
     this.screen.render();
+  }
+
+  addSectionData(data) {
+    let newData =_.map(data, (value, key) => {
+      return [key, value];
+    });
+    this.sections.setData({
+      headers: ['Section', 'Req'],
+      data: newData
+    });
   }
 
   addAlert(added: Date, mean: number) {

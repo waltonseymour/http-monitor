@@ -25,6 +25,7 @@ setInterval(() => {
 
 function updateAll(): void {
   graph.addData(xAxis, processor.requestWindow);
+  graph.addSectionData(processor.sectionTraffic);
   let point: number = processor.requestWindow.shift();
   processor.requestWindow.push(0);
   stats.update(point);
