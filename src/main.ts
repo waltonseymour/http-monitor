@@ -10,9 +10,9 @@ import { Stats } from './stats';
 
 const graph = new Graph();
 const stats = new Stats();
-const processor = new EventProcessor(stats);
+const processor = new EventProcessor(stats, 120);
 const watcher = new Watcher('test.log', processor);
-const xAxis = _.map(Array(processor.WINDOW_SIZE), (x,i) => {
+const xAxis = _.map(Array(processor.WINDOW_SIZE), (x, i) => {
   return (processor.WINDOW_SIZE - i) + 's';
 });
 
@@ -33,7 +33,7 @@ function updateAll(): void {
     if (alert !== null) {
       stats.alert = alert;
       let windowMean = _.sum(processor.requestWindow) / processor.requestWindow.length;
-      alert ? this.graph.addAlert(moment().toDate(), windowMean) : this.graph.removeAlert();
+      alert ? graph.addAlert(moment().toDate(), windowMean) : graph.removeAlert();
     }
   }
 }

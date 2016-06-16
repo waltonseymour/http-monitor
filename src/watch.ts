@@ -36,7 +36,6 @@ export class Watcher {
     lineReader.on('line', (line) => {
       // + 1 for newline character not included in string
       this.offset += line.length + 1;
-      // Sends event off to be processed
       this.processor.process(line, historical);
     });
   }

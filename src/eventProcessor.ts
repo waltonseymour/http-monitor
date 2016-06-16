@@ -4,15 +4,17 @@ import { Event } from './event';
 import { Stats } from './stats';
 
 export class EventProcessor {
-  WINDOW_SIZE: number = 120;
-  requestWindow: Array<number> = _.fill(Array(this.WINDOW_SIZE), 0);
+  WINDOW_SIZE: number;
+  requestWindow: Array<number>;
   sectionTraffic: Object = {};
   stats: Stats;
   currentBucket: number = 0;
   currentRequests: number = 0;
 
-  constructor(stats: Stats){
+  constructor(stats: Stats, windowSize: number = 120){
     this.stats = stats;
+    this.WINDOW_SIZE = windowSize;
+    this.requestWindow = _.fill(Array(this.WINDOW_SIZE), 0);
   }
 
   /*

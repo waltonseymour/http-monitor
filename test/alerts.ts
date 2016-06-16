@@ -11,19 +11,22 @@ import { EventProcessor } from '../src/eventProcessor';
 import { Stats } from '../src/stats';
 
 describe('Alerts', () => {
+  let stats: Stats;
+  let processor: EventProcessor;
+  let watcher: Watcher;
+
   before((done) => {
-    const stats = new Stats();
-    const processor = new EventProcessor(stats);
-    const watcher = new Watcher('test.log', processor);
-    const xAxis = _.map(Array(processor.WINDOW_SIZE), (x, i) => {
-      return (processor.WINDOW_SIZE - i) + 's';
-    });
-    
+    stats = new Stats();
+    processor = new EventProcessor(stats, 5);
+
     let n = 0;
     let id = setInterval(() => {
       let timestamp = moment().format('DD/MMM/YYYY:HH:mm:ss Z');
       let line = '127.0.0.1 user-identifier frank ['+timestamp+'] "GET /testing/apache_pb.gif HTTP/1.0" 200 2326' + '\n';
-      if (n === 100) done();
+      if (n === 100){
+        done();
+        clearInterval(id);
+      }
       if (Math.random() > 0.7) {
         appendFile('test.log', line, (err) => {
           if (err) throw err;
@@ -35,9 +38,34 @@ describe('Alerts', () => {
   });
 
 
-  it('shoud something', () =>{
+  it('should alert when traffic rises', (done) =>{
+    watcher = new Watcher('test.log', processor);
+    watcher.watch();
+    let n = 0;
+    let alert = false;
 
+    let id = setInterval(() => {
+      let timestamp = moment().format('DD/MMM/YYYY:HH:mm:ss Z');
+      let line = '127.0.0.1 user-identifier frank ['+timestamp+'] "GET /testing/apache_pb.gif HTTP/1.0" 200 2326' + '\n';
+      if (n === 100 || alert === true) {
+        assert(alert === true, 'alert is signaled');
+        done();
+        clearInterval(id);
+      }
+      if (Math.random() > 0.3) {
+        appendFile('test.log', line, (err) => {
+          if (err) throw err;
+          n++;
+          alert = processor.checkAlert() || alert;
+        });
+      }
+    }, 10);
 
-    assert(1 === 1);
+    setInterval(() => {
+      let point: number = processor.requestWindow.shift();
+      processor.requestWindow.push(0);
+      stats.update(point);
+    }, 1000);
+
   });
 });
