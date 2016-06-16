@@ -18,7 +18,7 @@ describe('Alerts', () => {
   before((done) => {
     stats = new Stats();
     processor = new EventProcessor(stats, 5);
-    // adds 100 requests at P(0.3) every 10ms to file before test
+    // adds 100 requests at P(0.3) every 10ms to file before testing
     let n = 0;
     let id = setInterval(() => {
       let timestamp = moment().format('DD/MMM/YYYY:HH:mm:ss Z');
@@ -42,7 +42,7 @@ describe('Alerts', () => {
     watcher.watch();
     let n = 0;
     let alert = false;
-
+    // adds 200 requests at P(0.7) every 10ms to file to trigger alert
     let id = setInterval(() => {
       let timestamp = moment().format('DD/MMM/YYYY:HH:mm:ss Z');
       let line = '127.0.0.1 user-identifier frank ['+timestamp+'] "GET /testing/apache_pb.gif HTTP/1.0" 200 2326' + '\n';
@@ -60,6 +60,7 @@ describe('Alerts', () => {
       }
     }, 10);
 
+    // shifts requestWindow and updates stats
     setInterval(() => {
       let point: number = processor.requestWindow.shift();
       processor.requestWindow.push(0);
