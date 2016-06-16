@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { watchFile, createReadStream } from 'fs';
 import { createInterface, ReadLine } from 'readline';
-import { EventProcessor} from './eventProcessor';
+import { EventProcessor } from './eventProcessor';
 
 export class Watcher {
   offset: number = 0;
@@ -11,6 +11,9 @@ export class Watcher {
   constructor(file: string, processor: EventProcessor) {
     this.file = file;
     this.processor = processor;
+
+    // grabs historical lines
+    this.handleLine(true);
   }
 
   /*
@@ -25,7 +28,7 @@ export class Watcher {
     });
   }
 
-  handleLine(): void {
+  handleLine(historical = false): void {
     // Opens read stream starting at the last point we've seen
     let lineReader: ReadLine = createInterface({
       input: createReadStream(this.file, <any>{ start: this.offset })
@@ -34,7 +37,7 @@ export class Watcher {
       // + 1 for newline character not included in string
       this.offset += line.length + 1;
       // Sends event off to be processed
-      this.processor.process(line);
+      this.processor.process(line, historical);
     });
   }
 

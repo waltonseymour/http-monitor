@@ -23,7 +23,7 @@ export class Event {
     this.ip = match[1];
     this.rfc = match[2];
     this.user = match[3];
-    this.date = moment(match[4], 'MM/DD/YYYY:HH:mm:ss Z').toDate();
+    this.date = moment(match[4], 'DD/MMM/YYYY:HH:mm:ss Z').toDate();
     this.request = match[5];
     this.section = sectionMatch !== null ? sectionMatch[1] : '/';
     this.status = parseInt(match[6]);

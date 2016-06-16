@@ -27,8 +27,8 @@ function updateAll(): void {
   graph.addData(xAxis, processor.requestWindow);
   let point: number = processor.requestWindow.shift();
   processor.requestWindow.push(0);
-  stats.update(point, stats.elapsed < processor.WINDOW_SIZE);
-  if (stats.elapsed > processor.WINDOW_SIZE * 1.5){
+  stats.update(point);
+  if (stats.elapsed > processor.WINDOW_SIZE * 1.5) {
     processor.checkAlert();
   }
 }

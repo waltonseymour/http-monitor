@@ -10,6 +10,8 @@ export class EventProcessor {
   sectionTraffic: Object = {};
   stats: Stats;
   graph: Graph;
+  currentBucket: number = 0;
+  currentRequests: number = 0;
 
   constructor(stats: Stats, graph: Graph){
     this.stats = stats;
@@ -20,36 +22,37 @@ export class EventProcessor {
     process: Takes in an log line as a string and parses an Event object.
     It then increments requestWindow and sectionTraffic as needed.
   */
-  process(line: string): void {
+  process(line: string, historical = false): void {
     const event = new Event(line);
-    if (moment().toDate().getTime() - event.date.getTime() > this.WINDOW_SIZE * 1000) {
-      return;
+    if (!this.stats.startTime) {
+      // first event to be processed is assumed to be the earliest
+      this.stats.startTime = event.date;
     }
 
-    if (!this.sectionTraffic[event.section]) {
-      this.sectionTraffic[event.section] = 1;
+    this.updateSection(event.section);
+    if (historical === true) {
+      // buckets
+      const epocSeconds = event.date.getTime() / 1000;
+      if (epocSeconds === this.currentBucket) {
+        this.currentRequests++;
+      } else {
+        this.stats.update(this.currentRequests);
+        this.currentBucket = epocSeconds;
+        this.currentRequests = 1;
+      }
+    } else {
+      this.requestWindow[this.requestWindow.length - 1]++;
     }
-    else {
-      this.sectionTraffic[event.section]++;
-    }
-    this.requestWindow[this.requestWindow.length - 1]++;
   }
 
-  /*
-    processHistorical: Takes in an log line as a string and parses an Event object.
-    It then increments stats as needed.
-  */
-  // processHistorical(line: string): void {
-  //   const event = new Event(line);
-  //
-  //   if (!this.sectionTraffic[event.section]) {
-  //     this.sectionTraffic[event.section] = 1;
-  //   }
-  //   else {
-  //     this.sectionTraffic[event.section]++;
-  //   }
-  //   this.requestWindow[this.requestWindow.length - 1]++;
-  // }
+  updateSection(section: string): void {
+    if (!this.sectionTraffic[section]) {
+      this.sectionTraffic[section] = 1;
+    } else {
+      this.sectionTraffic[section]++;
+    }
+  }
+
 
   /*
     checkAlert: Will add or remove alert to graph if the window mean exceeds
@@ -61,8 +64,7 @@ export class EventProcessor {
     if ((windowMean - this.stats.mean > this.stats.std_dev) && this.stats.alert === false) {
       this.stats.alert = true;
       this.graph.addAlert(moment().toDate(), windowMean);
-    }
-    else if ((windowMean - this.stats.mean <= this.stats.std_dev) && this.stats.alert === true) {
+    } else if ((windowMean - this.stats.mean <= this.stats.std_dev) && this.stats.alert === true) {
       this.stats.alert = false;
       this.graph.removeAlert();
     }

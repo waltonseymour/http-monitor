@@ -18,26 +18,13 @@ export class Stats {
     update: Takes in a data-point equivalent to requests in a given second.
     Modifies elapsed, mean, and standard_deviation using
     a rolling formula, preventing the need to keep track of historical data.
-    Also allows for elapsed to be updated without others being modified.
   */
-  update(point: number, onlyElapsed=false): void {
-    this.elapsed++;
-    if (onlyElapsed){ return; }
+  update(point: number): void {
+    this.elapsed = moment().diff(moment(this.startTime), 'seconds');
     this.Ex += point;
     this.Ex2 += point ** 2;
     this.std_dev = ((this.Ex2 - (this.Ex ** 2)/ this.elapsed) / this.elapsed) ** 0.5;
     this.mean = this.Ex / this.elapsed;
-  }
-
-
-  /*
-    update: Takes in a data-point equivalent to requests in a given second.
-    Modifies elapsed, mean, and standard_deviation using
-    a rolling formula, preventing the need to keep track of historical data.
-    Also allows for elapsed to be updated without others being modified.
-  */
-  updateHistorical(point: number): void {
-
   }
 
 
