@@ -47,7 +47,7 @@ describe('Alerts', () => {
     let id = setInterval(() => {
       let timestamp = moment().format('DD/MMM/YYYY:HH:mm:ss Z');
       let line = '127.0.0.1 user-identifier frank ['+timestamp+'] "GET /testing/apache_pb.gif HTTP/1.0" 200 2326' + '\n';
-      if (n === 100 || alert === true) {
+      if (n === 200 || alert === true) {
         assert(alert === true, 'alert is signaled');
         done();
         clearInterval(id);
