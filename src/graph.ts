@@ -10,6 +10,7 @@ export class Graph {
   line: contrib.line;
   alerts: contrib.table;
   sections: contrib.table;
+  donut: contrib.donut;
   grid: contrib.grid;
   requestData = {
      x: [],
@@ -19,15 +20,13 @@ export class Graph {
 
   constructor() {
     this.grid = new contrib.grid({rows: 12, cols: 12, screen: this.screen});
-
-    this.sections =  this.grid.set(8, 8, 4, 2, contrib.table, {
+    this.sections =  this.grid.set(8, 8, 4, 4, contrib.table, {
       label: 'Top Sections',
       interactive: false,
       bg: 'black',
       fg: 'green',
-      columnWidth: [8, 5]
+      columnWidth: [10, 7]
     });
-
     this.line = this.grid.set(0, 0, 8, 12, contrib.line, {
       style: {
         line: "yellow",
@@ -35,7 +34,6 @@ export class Graph {
         baseline: "black"
       }
     });
-
     this.alerts =  this.grid.set(8, 0, 4, 8, contrib.table, {
       keys: true,
       interactive: true,
