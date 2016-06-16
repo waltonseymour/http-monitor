@@ -29,7 +29,8 @@ function updateAll(): void {
   let point: number = processor.requestWindow.shift();
   processor.requestWindow.push(0);
   stats.update(point);
-  if (stats.elapsed > processor.WINDOW_SIZE * 1.5) {
+  // ensures there is enough data to compare
+  if (stats.elapsed > processor.WINDOW_SIZE) {
     let alert = processor.checkAlert();
     if (alert !== null) {
       stats.alert = alert;

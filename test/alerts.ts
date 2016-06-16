@@ -18,7 +18,7 @@ describe('Alerts', () => {
   before((done) => {
     stats = new Stats();
     processor = new EventProcessor(stats, 5);
-
+    // adds 100 requests at P(0.3) every 10ms to file before test
     let n = 0;
     let id = setInterval(() => {
       let timestamp = moment().format('DD/MMM/YYYY:HH:mm:ss Z');
@@ -36,7 +36,6 @@ describe('Alerts', () => {
     }, 10);
 
   });
-
 
   it('should alert when traffic rises', (done) =>{
     watcher = new Watcher('test.log', processor);
@@ -66,6 +65,5 @@ describe('Alerts', () => {
       processor.requestWindow.push(0);
       stats.update(point);
     }, 1000);
-
   });
 });
