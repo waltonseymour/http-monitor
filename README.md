@@ -3,7 +3,7 @@
 
 `npm run test` to run mocha tests
 
-`npm start -- {file}` to launch application for a given log file
+`npm start {file}` to launch application for a given log file
 
 
 #### Create a simple console program that monitors HTTP traffic on your machine:
